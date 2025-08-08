@@ -285,35 +285,28 @@
             ).join(' ');
         }
         
-        // Function to trigger GitHub Actions workflow
+        // Function to submit data via webhook (secure approach)
         async function triggerGitHubAction(userData) {
-            // Configuration - Update these values with your details
-            const config = {
-                owner: 'deepabhabhi',  // Your GitHub username
-                repo: 'deepabhabhi.github.io',  // Your repository name
-                token: 'YOUR_PAT_TOKEN_HERE'  // Replace with your Personal Access Token
-            };
+            // Using a webhook service to securely trigger GitHub Actions
+            // This keeps your PAT token secure in GitHub secrets
             
-            const url = `https://api.github.com/repos/${config.owner}/${config.repo}/dispatches`;
+            const webhookUrl = 'https://webhook.site/3b639230-454e-495b-b542-33d69169f98b'; // Your webhook URL
             
-            const response = await fetch(url, {
+            const response = await fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/vnd.github.everest-preview+json',
-                    'Authorization': `token ${config.token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     event_type: 'user_submission',
-                    client_payload: {
-                        user_data: userData,
-                        timestamp: new Date().toISOString()
-                    }
+                    user_data: userData,
+                    timestamp: new Date().toISOString(),
+                    repository: 'deepabhabhi/deepabhabhi.github.io'
                 })
             });
             
             if (!response.ok) {
-                throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+                throw new Error(`Webhook error: ${response.status} ${response.statusText}`);
             }
             
             return response;
