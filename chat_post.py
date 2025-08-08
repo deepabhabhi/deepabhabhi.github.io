@@ -2,6 +2,7 @@ import time
 import re
 import json
 import random
+import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -11,6 +12,22 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
+
+
+def is_running_in_ci():
+    """Check if script is running in CI/CD environment"""
+    ci_indicators = ['GITHUB_ACTIONS', 'CI', 'CONTINUOUS_INTEGRATION', 'BUILD_NUMBER', 'JENKINS_URL']
+    return any(os.getenv(indicator) for indicator in ci_indicators)
+
+
+def wait_for_user_input(message="Press Enter to continue..."):
+    """Wait for user input only if not running in CI"""
+    if is_running_in_ci():
+        print(f"{message} (Skipped - running in CI environment)")
+        return
+    else:
+        print(message)
+        input()
 
 
 def load_username():
@@ -100,6 +117,11 @@ def setup_chrome_driver():
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-plugins")
     chrome_options.add_argument("--disable-images")
+    
+    # Run headless in CI environment
+    if is_running_in_ci():
+        chrome_options.add_argument("--headless")
+        print("Running in headless mode for CI environment")
     
     # Ad blocking arguments
     chrome_options.add_argument("--disable-background-networking")
@@ -483,18 +505,15 @@ def navigate_and_input_username():
             else:
                 print("Failed to send messages")
                 
-            print("Browser will remain open. Press Enter in this console to close the browser...")
-            input()  # Wait for user to press Enter
+            wait_for_user_input("Browser will remain open. Press Enter in this console to close the browser...")
         else:
             print("Failed to input username")
-            print("Browser will remain open. Press Enter in this console to close the browser...")
-            input()  # Wait for user to press Enter even if failed
+            wait_for_user_input("Browser will remain open. Press Enter in this console to close the browser...")
             
     except Exception as e:
         print(f"Error in main function: {e}")
         if driver:
-            print("Browser will remain open. Press Enter in this console to close the browser...")
-            input()  # Wait for user to press Enter even if there's an error
+            wait_for_user_input("Browser will remain open. Press Enter in this console to close the browser...")
     finally:
         if driver:
             print("Closing browser...")
