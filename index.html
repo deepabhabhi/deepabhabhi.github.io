@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>deepabhabhi.github.io</title>
+    <title>Random Image</title>
     <style>
         * {
             margin: 0;
@@ -12,273 +12,210 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background-image: url('images/background.webp');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-            position: relative;
+            background: white;
+            gap: 20px;
         }
 
-        /* Fix background attachment for mobile */
-        @media (max-width: 768px) {
-            body {
-                background-attachment: scroll;
-            }
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .container {
-            text-align: center;
-            background: rgba(0, 0, 0, 0.1);
-            padding: 2rem;
+        .image-container {
             border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            margin: 2rem;
-            max-width: 600px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            color: #fff;
+        #randomImage {
+            max-width: 100vw;
+            max-height: 100vh;
+            width: auto;
+            height: auto;
+            display: none; /* Initially hidden */
         }
 
-        .subtitle {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .link-container {
-            margin: 2rem 0;
-        }
-
-        .main-link {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #ff0000 0%, #000000 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            min-height: 44px; /* Minimum touch target size */
-            min-width: 44px;
-        }
-
-        .main-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(45deg, #ff0000 0%, #000000 100%);
-        }
-
-        .qr-container {
-            margin-top: 1.5rem;
+        .banner-ad {
+            width: 728px;
+            height: 90px;
+            max-width: 100vw;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
         }
 
-        .qr-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            background: white;
-            padding: 8px;
+        .banner-ad-top {
+            width: 468px;
+            height: 60px;
+            max-width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .qr-text {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: #fff;
-            text-align: center;
-            opacity: 0.9;
+        .banner-ad-left {
+            width: 160px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .qr-text a {
-            color: #ff0000;
-            text-decoration: underline;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
+        .banner-ad-right {
+            width: 160px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .see-more-btn {
+            background: linear-gradient(135deg, #8B5FBF, #D8BFD8, #FFFFFF);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #4B0082;
+            text-decoration: none;
             display: inline-block;
-            margin: 0 0.1rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(139, 95, 191, 0.3);
+            cursor: pointer;
         }
 
-        .qr-text a:hover,
-        .qr-text a:focus {
-            background-color: rgba(255, 0, 0, 0.1);
-            outline: none;
+        .see-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.4);
+            background: linear-gradient(135deg, #9A6FD1, #E6C7E6, #FFFFFF);
         }
 
-
-
-        /* Comprehensive mobile responsiveness */
-        @media (max-width: 768px) {
-            .container {
-                margin: 1rem;
-                padding: 1.5rem;
-                max-width: 95%;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-                line-height: 1.3;
-            }
-            
-            .subtitle {
-                font-size: 1.3rem;
-            }
-            
-            .main-link {
-                font-size: 1.1rem;
-                padding: 1.2rem 2.5rem;
-                width: 100%;
-                max-width: 280px;
-                box-sizing: border-box;
-            }
-            
-            .qr-image {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .qr-text {
-                font-size: 0.95rem;
-                line-height: 1.4;
-                margin: 0.5rem 0;
-            }
-        }
-
-        /* Extra small screens */
-        @media (max-width: 480px) {
-            .container {
-                margin: 0.5rem;
-                padding: 1rem;
-                max-width: 98%;
-            }
-            
-            h1 {
-                font-size: 1.3rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .main-link {
-                font-size: 1rem;
-                padding: 1rem 2rem;
-            }
-            
-            .qr-image {
-                width: 90px;
-                height: 90px;
-            }
-            
-            .qr-text {
-                font-size: 0.9rem;
-                padding: 0 0.5rem;
-            }
-            
-            .qr-container {
-                margin-top: 1rem;
-            }
-        }
-
-        /* Very small screens */
-        @media (max-width: 320px) {
-            .container {
-                margin: 0.25rem;
-                padding: 0.75rem;
-            }
-            
-            h1 {
-                font-size: 1.2rem;
-            }
-            
-            .subtitle {
-                font-size: 1rem;
-            }
-            
-            .main-link {
-                font-size: 0.9rem;
-                padding: 0.9rem 1.5rem;
-            }
-            
-            .qr-text {
-                font-size: 0.85rem;
-            }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Click below to see today's photo</h1>
-        <p class="subtitle">Daily New Photo</p>
-        <div class="link-container" id="linkContainer">
-            <p class="loading">Loading link...</p>
+    <div class="banner-ad-top" id="bannerAdTop">
+        <!-- Top banner ad will be loaded here -->
+    </div>
+    
+    <!-- Top Banner Ad Scripts -->
+    <script type="text/javascript">
+        atOptions = {
+            'key': 'ecd04bdc3c160236662aa68620582cec',
+            'format': 'iframe',
+            'height': 60,
+            'width': 468,
+            'params': {}
+        };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/ecd04bdc3c160236662aa68620582cec/invoke.js"></script>
+    
+    <div class="main-content">
+        <div class="banner-ad-left" id="bannerAdLeft">
+            <!-- Left banner ad will be loaded here -->
         </div>
+        
+        <!-- Left Banner Ad Scripts -->
+        <script type="text/javascript">
+            atOptions = {
+                'key': '3b8ee89136f548daf22d928d4018b112',
+                'format': 'iframe',
+                'height': 600,
+                'width': 160,
+                'params': {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/3b8ee89136f548daf22d928d4018b112/invoke.js"></script>
+        
+        <div class="image-container">
+            <img id="randomImage" alt="Random Image" />
+        </div>
+        
+        <div class="banner-ad-right" id="bannerAdRight">
+            <!-- Right banner ad will be loaded here -->
+        </div>
+        
+        <!-- Right Banner Ad Scripts -->
+        <script type="text/javascript">
+            atOptions = {
+                'key': '3cab0992bb513dd210a5d73cad050e58',
+                'format': 'iframe',
+                'height': 300,
+                'width': 160,
+                'params': {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/3cab0992bb513dd210a5d73cad050e58/invoke.js"></script>
+    </div>
+    
+    <div class="button-container">
+        <a href="https://www.profitableratecpm.com/yw7drzvcg?key=6ef4ec0b2f9e9ed12304346232e1f7a6" target="_blank" class="see-more-btn">
+            See More Photos
+        </a>
+    </div>
+    
+    <div class="banner-ad" id="bannerAd">
+        <!-- Banner ad will be loaded here -->
     </div>
 
     <script>
-        // Load and display the link from link.json
-        async function loadLink() {
+        let images = [];
+
+        async function loadImageList() {
             try {
-                const response = await fetch('link.json');
-                const linkData = await response.json();
-                
-                const linkContainer = document.getElementById('linkContainer');
-                linkContainer.innerHTML = `
-                    <a href="${linkData.url}" target="_blank" class="main-link">
-                        See Photo
-                    </a>
-                    <div class="qr-container">
-                        <img src="images/qr.webp" alt="QR Code" class="qr-image">
-                        <p class="qr-text">Only ₹5 to get MORE OF MY PHOTOS directly to you email inbox.</p>
-                        <p class="qr-text">After payment, <a href="https://forms.gle/j5L8Z1YV6ahCh8E18" target="_blank" style="color: #ff0000; text-decoration: underline;">REPLY HERE</a>. If paid, I will reply you soon.</p>
-                        <p class="qr-text">NOTE: If you want to CHAT directly with me then enter Telegram ID as well in the above form after payment.</p>
-                    </div>
-                `;
+                const response = await fetch('images.json');
+                const data = await response.json();
+                images = data.images;
+                loadRandomImage();
             } catch (error) {
-                console.error('Error loading link:', error);
-                const linkContainer = document.getElementById('linkContainer');
-                linkContainer.innerHTML = '<p style="color: #ff6b6b;">Error loading link</p>';
+                console.error('Error loading image list:', error);
             }
         }
 
+        function loadRandomImage() {
+            if (images.length > 0) {
+                const randomIndex = Math.floor(Math.random() * images.length);
+                const selectedImage = images[randomIndex];
+                const imageElement = document.getElementById('randomImage');
+                
+                // Show image only after it loads
+                imageElement.onload = function() {
+                    this.style.display = 'block';
+                };
+                
+                imageElement.src = selectedImage;
+            }
+        }
 
-
-        // Load the link when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            loadLink();
-        });
+        window.addEventListener('load', loadImageList);
     </script>
+
+    <!-- Bottom Banner Ad Scripts -->
+    <script type="text/javascript">
+        atOptions = {
+            'key': '1e316d7b5d48f6edfec5ecd590b8337e',
+            'format': 'iframe',
+            'height': 90,
+            'width': 728,
+            'params': {}
+        };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/1e316d7b5d48f6edfec5ecd590b8337e/invoke.js"></script>
+    
+    <!-- Popunder Ad Script -->
+    <script type='text/javascript' src='//pl27376131.profitableratecpm.com/4d/e4/90/4de490615a331cd64dc4f03ca74f0829.js'></script>
 </body>
 </html>

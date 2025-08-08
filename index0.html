@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>deepabhabhi.github.io</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('images/background.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            position: relative;
+        }
+
+        /* Fix background attachment for mobile */
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+            }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin: 2rem;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .link-container {
+            margin: 2rem 0;
+        }
+
+        .main-link {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #ff0000 0%, #000000 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-height: 44px; /* Minimum touch target size */
+            min-width: 44px;
+        }
+
+        .main-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ff0000 0%, #000000 100%);
+        }
+
+        .qr-container {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .qr-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background: white;
+            padding: 8px;
+        }
+
+        .qr-text {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #fff;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .qr-text a {
+            color: #ff0000;
+            text-decoration: underline;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin: 0 0.1rem;
+        }
+
+        .qr-text a:hover,
+        .qr-text a:focus {
+            background-color: rgba(255, 0, 0, 0.1);
+            outline: none;
+        }
+
+
+
+        /* Comprehensive mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+                max-width: 95%;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                line-height: 1.3;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .main-link {
+                font-size: 1.1rem;
+                padding: 1.2rem 2.5rem;
+                width: 100%;
+                max-width: 280px;
+                box-sizing: border-box;
+            }
+            
+            .qr-image {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .qr-text {
+                font-size: 0.95rem;
+                line-height: 1.4;
+                margin: 0.5rem 0;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .container {
+                margin: 0.5rem;
+                padding: 1rem;
+                max-width: 98%;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .main-link {
+                font-size: 1rem;
+                padding: 1rem 2rem;
+            }
+            
+            .qr-image {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .qr-text {
+                font-size: 0.9rem;
+                padding: 0 0.5rem;
+            }
+            
+            .qr-container {
+                margin-top: 1rem;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 320px) {
+            .container {
+                margin: 0.25rem;
+                padding: 0.75rem;
+            }
+            
+            h1 {
+                font-size: 1.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .main-link {
+                font-size: 0.9rem;
+                padding: 0.9rem 1.5rem;
+            }
+            
+            .qr-text {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Click below to see today's photo</h1>
+        <p class="subtitle">Daily New Photo</p>
+        <div class="link-container" id="linkContainer">
+            <p class="loading">Loading link...</p>
+        </div>
+    </div>
+
+    <script>
+        // Load and display the link from link.json
+        async function loadLink() {
+            try {
+                const response = await fetch('link.json');
+                const linkData = await response.json();
+                
+                const linkContainer = document.getElementById('linkContainer');
+                linkContainer.innerHTML = `
+                    <a href="${linkData.url}" target="_blank" class="main-link">
+                        See Photo
+                    </a>
+                    <div class="qr-container">
+                        <img src="images/qr.webp" alt="QR Code" class="qr-image">
+                        <p class="qr-text">Only ₹5 to get MORE OF MY PHOTOS directly to you email inbox.</p>
+                        <p class="qr-text">After payment, <a href="https://forms.gle/j5L8Z1YV6ahCh8E18" target="_blank" style="color: #ff0000; text-decoration: underline;">REPLY HERE</a>. If paid, I will reply you soon.</p>
+                        <p class="qr-text">NOTE: If you want to CHAT directly with me then enter Telegram ID as well in the above form after payment.</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading link:', error);
+                const linkContainer = document.getElementById('linkContainer');
+                linkContainer.innerHTML = '<p style="color: #ff6b6b;">Error loading link</p>';
+            }
+        }
+
+
+
+        // Load the link when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLink();
+        });
+    </script>
+</body>
+</html>
