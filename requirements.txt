@@ -2,3 +2,4 @@ selenium>=4.15.0
 webdriver-manager>=4.0.1
 google-genai
 python-dotenv
+cryptography>=3.4.0
