@@ -1,0 +1,36 @@
+name: Handle User Submission
+
+on:
+  repository_dispatch:
+    types: [user_submission]
+
+jobs:
+  save-user-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.PAT_TOKEN }}
+    
+    - name: Append user data to users.txt
+      run: |
+        echo "${{ github.event.client_payload.user_data }}" >> users.txt
+        echo "User data appended: ${{ github.event.client_payload.user_data }}"
+        echo "Timestamp: ${{ github.event.client_payload.timestamp }}"
+    
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add users.txt
+        
+        # Check if there are changes to commit
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Add new user: ${{ github.event.client_payload.user_data }}"
+          git push
+          echo "Changes committed and pushed successfully"
+        fi

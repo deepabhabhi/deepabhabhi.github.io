@@ -25,11 +25,24 @@
             align-items: center;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .container {
             text-align: center;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.1);
             padding: 2rem;
             border-radius: 15px;
             backdrop-filter: blur(10px);
@@ -39,7 +52,7 @@
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
             color: #fff;
         }
@@ -51,7 +64,7 @@
         .main-link {
             display: inline-block;
             padding: 1rem 2rem;
-            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(45deg, #ff0000 0%, #000000 100%);
             color: white;
             text-decoration: none;
             border-radius: 50px;
@@ -64,82 +77,116 @@
         .main-link:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(45deg, #764ba2 0%, #667eea 100%);
+            background: linear-gradient(45deg, #ff0000 0%, #000000 100%);
         }
 
-        .visitor-counter {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px 20px;
-            border-radius: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .counter-display {
+        .qr-container {
+            margin-top: 1.5rem;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: white;
         }
 
-        .counter-label {
-            font-weight: 500;
+        .qr-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background: white;
+            padding: 8px;
+        }
+
+        .qr-text {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #fff;
+            text-align: center;
             opacity: 0.9;
         }
 
-        .counter-number {
-            font-weight: bold;
-            color: #4CAF50;
-            font-size: 16px;
-            min-width: 40px;
-            text-align: center;
-            background: rgba(76, 175, 80, 0.1);
-            padding: 2px 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(76, 175, 80, 0.3);
+        .email-form {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .loading {
-            color: #ccc;
-            font-style: italic;
+        .form-input {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            min-width: 120px;
+            flex: 1;
+            max-width: 150px;
+        }
+
+        .form-input::placeholder {
+            color: #666;
+        }
+
+        .submit-btn {
+            padding: 8px 16px;
+            background: linear-gradient(45deg, #ff0000 0%, #000000 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-note {
+            margin-top: 0.8rem;
+            font-size: 0.75rem;
+            color: #fff;
+            text-align: center;
+            opacity: 0.7;
         }
 
         @media (max-width: 768px) {
+            .qr-image {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .email-form {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-input {
+                max-width: 100%;
+                width: 200px;
+            }
+            
             .container {
                 margin: 1rem;
                 padding: 1.5rem;
             }
             
             h1 {
-                font-size: 2rem;
-            }
-            
-            .visitor-counter {
-                position: relative;
-                margin-top: 2rem;
-                bottom: auto;
-                right: auto;
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>deepabhabhi.github.io</h1>
+        <h1>Click below to see today's photo</h1>
         <div class="link-container" id="linkContainer">
             <p class="loading">Loading link...</p>
-        </div>
-    </div>
-
-    <div class="visitor-counter">
-        <div class="counter-display">
-            <span class="counter-label">Visitors:</span>
-            <span class="counter-number" id="visitorCount">Loading...</span>
         </div>
     </div>
 
@@ -153,8 +200,18 @@
                 const linkContainer = document.getElementById('linkContainer');
                 linkContainer.innerHTML = `
                     <a href="${linkData.url}" target="_blank" class="main-link">
-                        Visit Link
+                        See Photo
                     </a>
+                    <div class="qr-container">
+                        <img src="images/qr.webp" alt="QR Code" class="qr-image">
+                        <p class="qr-text">Only ₹1 to get more of my photos directly to you email inbox.</p>
+                        <form class="email-form" onsubmit="handleSubmit(event)">
+                            <input type="text" class="form-input" placeholder="Your Name" required>
+                            <input type="email" class="form-input" placeholder="Your Email" required>
+                            <button type="submit" class="submit-btn">Submit</button>
+                        </form>
+                        <p class="form-note">NOTE: Name will be verified in the payment statement.</p>
+                    </div>
                 `;
             } catch (error) {
                 console.error('Error loading link:', error);
@@ -163,71 +220,108 @@
             }
         }
 
-        // Global Visitor Counter using API
-        async function initVisitorCounter() {
-            const counterElement = document.getElementById('visitorCount');
+        // Handle form submission
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const nameInput = form.querySelector('input[type="text"]');
+            const emailInput = form.querySelector('input[type="email"]');
+            
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            
+            // Validation: Check if both fields are filled
+            if (!name) {
+                alert('Please enter your name.');
+                nameInput.focus();
+                return;
+            }
+            
+            if (!email) {
+                alert('Please enter your email.');
+                emailInput.focus();
+                return;
+            }
+            
+            // Email validation (basic pattern check)
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address.');
+                emailInput.focus();
+                return;
+            }
+            
+            // Format the data
+            const formattedName = toTitleCase(name);
+            const formattedEmail = email.toLowerCase();
+            const formattedData = `${formattedName}, ${formattedEmail}`;
+            
+            // Show loading state
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
             
             try {
-                // Using a free visitor counter API
-                const response = await fetch('https://api.countapi.xyz/hit/deepabhabhi.github.io/visits');
-                const data = await response.json();
+                // Trigger GitHub Actions workflow
+                await triggerGitHubAction(formattedData);
                 
-                if (data && data.value) {
-                    animateCounter(data.value);
-                } else {
-                    // Fallback to localStorage if API fails
-                    fallbackCounter();
-                }
+                alert(`Thank you! Your details have been submitted.\nFormatted as: ${formattedData}`);
+                form.reset();
             } catch (error) {
-                console.log('API counter failed, using fallback:', error);
-                // Fallback to localStorage if API fails
-                fallbackCounter();
+                console.error('Error submitting data:', error);
+                alert('Sorry, there was an error submitting your details. Please try again.');
+            } finally {
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         }
-
-        // Fallback counter using localStorage
-        function fallbackCounter() {
-            const COUNTER_KEY = 'deepabhabhi_visitor_count';
-            let currentCount = parseInt(localStorage.getItem(COUNTER_KEY)) || 0;
-            currentCount++;
-            localStorage.setItem(COUNTER_KEY, currentCount.toString());
-            animateCounter(currentCount);
+        
+        // Function to convert text to title case
+        function toTitleCase(str) {
+            return str.toLowerCase().split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
         }
-
-        // Animate counter display
-        function animateCounter(targetCount) {
-            const counterElement = document.getElementById('visitorCount');
-            let displayCount = Math.max(1, targetCount - 10);
-            
-            const animate = () => {
-                if (displayCount < targetCount) {
-                    displayCount++;
-                    counterElement.textContent = displayCount.toLocaleString();
-                    setTimeout(animate, 50);
-                } else {
-                    counterElement.textContent = targetCount.toLocaleString();
-                    counterElement.style.animation = 'pulse 0.5s ease-in-out';
-                }
+        
+        // Function to trigger GitHub Actions workflow
+        async function triggerGitHubAction(userData) {
+            // Configuration - Update these values with your details
+            const config = {
+                owner: 'deepabhabhi',  // Your GitHub username
+                repo: 'deepabhabhi.github.io',  // Your repository name
+                token: 'YOUR_PAT_TOKEN_HERE'  // Replace with your Personal Access Token
             };
             
-            setTimeout(animate, 500);
+            const url = `https://api.github.com/repos/${config.owner}/${config.repo}/dispatches`;
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/vnd.github.everest-preview+json',
+                    'Authorization': `token ${config.token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    event_type: 'user_submission',
+                    client_payload: {
+                        user_data: userData,
+                        timestamp: new Date().toISOString()
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+            }
+            
+            return response;
         }
 
-        // Add CSS animation for pulse effect
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Load the link and initialize counter when the page loads
+        // Load the link when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             loadLink();
-            initVisitorCounter();
         });
     </script>
 </body>
