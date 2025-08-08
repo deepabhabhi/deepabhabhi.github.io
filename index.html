@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>deepabhabhi.github.io</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('images/background.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin: 2rem;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .link-container {
+            margin: 2rem 0;
+        }
+
+        .main-link {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .visitor-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .counter-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: white;
+        }
+
+        .counter-label {
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .counter-number {
+            font-weight: bold;
+            color: #4CAF50;
+            font-size: 16px;
+            min-width: 40px;
+            text-align: center;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .loading {
+            color: #ccc;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .visitor-counter {
+                position: relative;
+                margin-top: 2rem;
+                bottom: auto;
+                right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>deepabhabhi.github.io</h1>
+        <div class="link-container" id="linkContainer">
+            <p class="loading">Loading link...</p>
+        </div>
+    </div>
+
+    <div class="visitor-counter">
+        <div class="counter-display">
+            <span class="counter-label">Visitors:</span>
+            <span class="counter-number" id="visitorCount">Loading...</span>
+        </div>
+    </div>
+
+    <script>
+        // Load and display the link from link.json
+        async function loadLink() {
+            try {
+                const response = await fetch('link.json');
+                const linkData = await response.json();
+                
+                const linkContainer = document.getElementById('linkContainer');
+                linkContainer.innerHTML = `
+                    <a href="${linkData.url}" target="_blank" class="main-link">
+                        Visit Link
+                    </a>
+                `;
+            } catch (error) {
+                console.error('Error loading link:', error);
+                const linkContainer = document.getElementById('linkContainer');
+                linkContainer.innerHTML = '<p style="color: #ff6b6b;">Error loading link</p>';
+            }
+        }
+
+        // Global Visitor Counter using API
+        async function initVisitorCounter() {
+            const counterElement = document.getElementById('visitorCount');
+            
+            try {
+                // Using a free visitor counter API
+                const response = await fetch('https://api.countapi.xyz/hit/deepabhabhi.github.io/visits');
+                const data = await response.json();
+                
+                if (data && data.value) {
+                    animateCounter(data.value);
+                } else {
+                    // Fallback to localStorage if API fails
+                    fallbackCounter();
+                }
+            } catch (error) {
+                console.log('API counter failed, using fallback:', error);
+                // Fallback to localStorage if API fails
+                fallbackCounter();
+            }
+        }
+
+        // Fallback counter using localStorage
+        function fallbackCounter() {
+            const COUNTER_KEY = 'deepabhabhi_visitor_count';
+            let currentCount = parseInt(localStorage.getItem(COUNTER_KEY)) || 0;
+            currentCount++;
+            localStorage.setItem(COUNTER_KEY, currentCount.toString());
+            animateCounter(currentCount);
+        }
+
+        // Animate counter display
+        function animateCounter(targetCount) {
+            const counterElement = document.getElementById('visitorCount');
+            let displayCount = Math.max(1, targetCount - 10);
+            
+            const animate = () => {
+                if (displayCount < targetCount) {
+                    displayCount++;
+                    counterElement.textContent = displayCount.toLocaleString();
+                    setTimeout(animate, 50);
+                } else {
+                    counterElement.textContent = targetCount.toLocaleString();
+                    counterElement.style.animation = 'pulse 0.5s ease-in-out';
+                }
+            };
+            
+            setTimeout(animate, 500);
+        }
+
+        // Add CSS animation for pulse effect
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Load the link and initialize counter when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLink();
+            initVisitorCounter();
+        });
+    </script>
+</body>
+</html>
