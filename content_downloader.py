@@ -21,6 +21,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 def setup_driver():
     """Setup Chrome driver with options"""
     chrome_options = Options()
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
@@ -136,6 +137,23 @@ def create_content_folder():
     return content_folder
 
 
+def clear_content_folder(content_folder):
+    """Clear all files from the content folder"""
+    try:
+        if os.path.exists(content_folder):
+            files_removed = 0
+            for filename in os.listdir(content_folder):
+                file_path = os.path.join(content_folder, filename)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                    files_removed += 1
+            print(f"Cleared content folder: removed {files_removed} files")
+        else:
+            print("Content folder doesn't exist, nothing to clear")
+    except Exception as e:
+        print(f"Error clearing content folder: {e}")
+
+
 def get_unique_filename(folder, filename):
     """Get a unique filename by adding numbers if file already exists"""
     base_path = os.path.join(folder, filename)
@@ -232,6 +250,9 @@ def main():
         
         # Create content folder
         content_folder = create_content_folder()
+        
+        # Clear content folder
+        clear_content_folder(content_folder)
         
         # Setup driver
         driver = setup_driver()
