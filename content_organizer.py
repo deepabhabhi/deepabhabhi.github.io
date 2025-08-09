@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
-Content Organization Script
-Converts all image files in the content folder to WebP format
-and renames them sequentially as image_1.webp, image_2.webp, etc.
+Content Organizer Script
+Combines content organization and image list generation functionality.
+1. Converts all image files in the content folder to WebP format and renames them sequentially
+2. Generates a JSON file with all images for dynamic loading in the web interface
 """
 
 import os
+import json
 import shutil
+import tempfile
 from pathlib import Path
 from PIL import Image
-import tempfile
 
 def is_image_file(file_path):
     """Check if file is a supported image format"""
@@ -39,7 +41,7 @@ def organize_content():
     
     if not content_dir.exists():
         print("Content folder not found!")
-        return
+        return False
     
     # Get all image files
     image_files = []
@@ -49,7 +51,7 @@ def organize_content():
     
     if not image_files:
         print("No image files found in content folder!")
-        return
+        return False
     
     print(f"Found {len(image_files)} image files to process...")
     
@@ -93,15 +95,89 @@ def organize_content():
             print(f"Created: {final_path.name}")
     
     print(f"\nContent organization complete! {len(converted_files)} images converted and renamed.")
+    return True
+
+def get_image_files_for_json(content_dir):
+    """Get all image files from the content directory for JSON generation"""
+    image_extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.tif', '.gif', '.webp', '.svg'}
+    image_files = []
+    
+    if not content_dir.exists():
+        print(f"Content directory '{content_dir}' not found!")
+        return []
+    
+    for file_path in content_dir.iterdir():
+        if file_path.is_file() and file_path.suffix.lower() in image_extensions:
+            # Store relative path for web use
+            relative_path = f"content/{file_path.name}"
+            image_files.append(relative_path)
+    
+    return sorted(image_files)  # Sort for consistent order
+
+def generate_image_list():
+    """Generate JSON file with list of all images"""
+    content_dir = Path("content")
+    output_file = Path("images.json")
+    
+    # Get all image files
+    image_files = get_image_files_for_json(content_dir)
+    
+    if not image_files:
+        print("No image files found in content folder!")
+        return False
+    
+    # Create JSON structure
+    image_data = {
+        "images": image_files,
+        "count": len(image_files),
+        "last_updated": os.path.getmtime(content_dir)
+    }
+    
+    # Write to JSON file
+    try:
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(image_data, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Generated {output_file} with {len(image_files)} images:")
+        for img in image_files:
+            print(f"   - {img}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error writing {output_file}: {str(e)}")
+        return False
 
 def main():
-    """Entry point"""
+    """Entry point - runs content organization first, then generates image list"""
     try:
-        organize_content()
+        print("🔄 Starting content organization...")
+        print("=" * 50)
+        
+        # Step 1: Organize content (from content_org.py)
+        org_success = organize_content()
+        
+        if not org_success:
+            print("\n❌ Content organization failed. Skipping image list generation.")
+            return
+        
+        print("\n" + "=" * 50)
+        print("🔍 Generating image list...")
+        
+        # Step 2: Generate image list (from generate_image_list.py)
+        list_success = generate_image_list()
+        
+        print("\n" + "=" * 50)
+        if org_success and list_success:
+            print("✨ Content organization and image list generation completed successfully!")
+            print("💡 Tip: Run this script whenever you add new images to the content folder.")
+        else:
+            print("⚠️ Some operations completed with issues. Please check the output above.")
+            
     except KeyboardInterrupt:
-        print("\nOperation cancelled by user.")
+        print("\n⏹️ Operation cancelled by user.")
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        print(f"\n💥 An error occurred: {str(e)}")
 
 if __name__ == "__main__":
     main()
